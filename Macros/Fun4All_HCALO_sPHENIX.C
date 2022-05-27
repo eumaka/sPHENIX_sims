@@ -38,7 +38,7 @@ R__LOAD_LIBRARY(libCalib.so.0.0.0)
 // try inputFile = /sphenix/sim/sim01/sphnxpro/sHijing_HepMC/sHijing_0-12fm.dat
 
 int Fun4All_HCALO_sPHENIX(
-    const int nEvents = 100,
+    const int nEvents = 1,
     const string &inputFile = "",
     const string &outputFile = "",
     const int skip = 0,
@@ -53,8 +53,8 @@ int Fun4All_HCALO_sPHENIX(
   // Input options
   //===============
     
-  Input::SIMPLE = true;
-  Input::GUN = false;
+  Input::SIMPLE = false;
+  Input::GUN = true;
     
   // This creates the input generator(s)
   InputInit();
@@ -84,7 +84,7 @@ int Fun4All_HCALO_sPHENIX(
   InputRegister();
 
   // turn the display on (default off)
-  Enable::DISPLAY = false;
+  Enable::DISPLAY = true;
 
   
   Enable::HCALOUT = true;
@@ -128,12 +128,12 @@ int Fun4All_HCALO_sPHENIX(
     outputroot.erase(pos, remove_this.length());
   }
 
-
+/*
    gSystem->Load("libCalib.so.0.0.0");
    Calib *hcal_eval = new Calib();
    hcal_eval->set_filename("hcal_tower_test.root");
    se->registerSubsystem(hcal_eval);
-
+*/
 
    //--------------
   // Set up Input Managers
