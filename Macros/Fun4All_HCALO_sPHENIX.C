@@ -27,14 +27,18 @@
 
 #include <phool/PHRandomSeed.h>
 #include <phool/recoConsts.h>
+#include "Calib.h"
+
 
 R__LOAD_LIBRARY(libfun4all.so)
+R__LOAD_LIBRARY(libCalib.so.0.0.0)
+
 
 // For HepMC Hijing
 // try inputFile = /sphenix/sim/sim01/sphnxpro/sHijing_HepMC/sHijing_0-12fm.dat
 
 int Fun4All_HCALO_sPHENIX(
-    const int nEvents = 1,
+    const int nEvents = 100,
     const string &inputFile = "",
     const string &outputFile = "",
     const int skip = 0,
@@ -49,8 +53,8 @@ int Fun4All_HCALO_sPHENIX(
   // Input options
   //===============
     
-  Input::SIMPLE = false;
-  Input::GUN = true;
+  Input::SIMPLE = true;
+  Input::GUN = false;
     
   // This creates the input generator(s)
   InputInit();
@@ -63,11 +67,11 @@ int Fun4All_HCALO_sPHENIX(
                                                                                 PHG4SimpleEventGenerator::Gaus,
                                                                                 PHG4SimpleEventGenerator::Gaus);
      INPUTGENERATOR::SimpleEventGenerator[0]->set_vertex_distribution_mean(0., 0., 0.);
-     INPUTGENERATOR::SimpleEventGenerator[0]->set_vertex_distribution_width(0.01, 0.01, 5.);
+     INPUTGENERATOR::SimpleEventGenerator[0]->set_vertex_distribution_width(0., 0., 0.);
     
      INPUTGENERATOR::SimpleEventGenerator[0]->set_eta_range(-1, 1);
      INPUTGENERATOR::SimpleEventGenerator[0]->set_phi_range(-M_PI, M_PI);
-     INPUTGENERATOR::SimpleEventGenerator[0]->set_pt_range(0.1, 20.);
+     INPUTGENERATOR::SimpleEventGenerator[0]->set_pt_range(1., 1.);
   }
  
   if (Input::GUN)
@@ -80,7 +84,7 @@ int Fun4All_HCALO_sPHENIX(
   InputRegister();
 
   // turn the display on (default off)
-  Enable::DISPLAY = true;
+  Enable::DISPLAY = false;
 
   
   Enable::HCALOUT = true;
@@ -123,6 +127,13 @@ int Fun4All_HCALO_sPHENIX(
   {
     outputroot.erase(pos, remove_this.length());
   }
+
+
+   gSystem->Load("libCalib.so.0.0.0");
+   Calib *hcal_eval = new Calib();
+   hcal_eval->set_filename("hcal_tower_test.root");
+   se->registerSubsystem(hcal_eval);
+
 
    //--------------
   // Set up Input Managers
